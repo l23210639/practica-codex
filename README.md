@@ -1,68 +1,77 @@
-# Actividad: Diseño de Propuesta Temática Pequeña para GitHub Classroom
+# Plantilla de Documentación Técnica para Raspberry Pi Pico W (RP2040)
 
-## Descripción general
-En esta actividad diseñarás una propuesta de práctica temática pequeña enfocada en **arquitectura de computadoras y programación de sistemas**. Tu prioridad será documentar claramente la idea, justificar decisiones técnicas y organizar una estructura de repositorio limpia y mantenible.
+## Resumen
+Este repositorio está preparado para documentar y organizar un proyecto de **Raspberry Pi Pico W** usando **MicroPython**, priorizando estructura limpia y trazabilidad técnica sin alterar la lógica base del firmware.
 
-La implementación de código es **secundaria y opcional** en esta etapa; lo principal es que la propuesta sea viable, concreta y lista para desarrollarse en pequeño.
+> Estado actual: el código fuente proporcionado contiene solo un marcador de posición (`# PASTE YOUR MICROPYTHON CODE HERE`).
 
-## Objetivo de aprendizaje
-Al finalizar esta actividad, serás capaz de:
+## Objetivo
+- Estandarizar la estructura del repositorio para Pico W.
+- Documentar arquitectura, cableado y mapeo GPIO.
+- Facilitar ejecución en **Wokwi** y en hardware real.
+- Mantener seguridad básica de credenciales si se agrega Wi-Fi.
 
-- Plantear un problema técnico realista para una práctica corta.
-- Justificar la selección de lenguaje según el tipo de solución.
-- Diseñar la estructura de un repositorio profesional y ordenado.
-- Documentar caso de uso, alcance y plan de pruebas de manera clara.
-- Definir criterios de éxito y riesgos técnicos antes de programar.
+## Estructura propuesta (MicroPython)
+```text
+.
+├── README.md
+├── src/
+│   └── main.py
+├── lib/
+│   └── .gitkeep
+└── docs/
+    ├── architecture.md
+    └── wiring.md
+```
 
-## Lenguajes permitidos
-Puedes elegir **solo uno** como lenguaje principal:
+## Características de la plantilla
+- Organización mínima recomendada para firmware en MicroPython.
+- Documentación base lista para ampliar cuando se incorpore lógica real.
+- Sección de despliegue para simulación y para tarjeta física.
+- Reglas para manejo seguro de credenciales Wi-Fi.
 
-- ARM64 Assembly
-- C
-- Python
-- Bash
+## Componentes (derivados del material disponible)
+Con la información entregada en este turno no se incluyó un `diagram.json` con contenido real, por lo que solo se puede confirmar:
 
-## Reglas para mantener el proyecto pequeño
-- Limita el alcance a una sola funcionalidad principal.
-- Evita interfaces gráficas y prioriza ejecución en terminal.
-- No uses frameworks.
-- No uses bases de datos.
-- No uses Docker o contenedores.
-- No uses nube ni APIs externas.
-- No agregues dependencias complejas.
-- Si eliges ARM64 Assembly, mantén el programa **muy pequeño**.
+- 1 × Raspberry Pi Pico W (RP2040 con Wi‑Fi)
 
-## Entregables esperados
-1. `docs/propuesta.md` completo.
-2. `docs/caso_de_uso.md` completo.
-3. `docs/estructura_repositorio.md` revisado y adaptado a tu idea.
-4. `docs/plan_de_pruebas.md` con casos mínimos definidos.
-5. `tests/test_plan.md` como checklist final.
-6. Un prototipo mínimo opcional en `src/main.<ext>`.
+Si compartes el `diagram.json` real (Wokwi), se completa la lista exacta de periféricos, resistencias, sensores y actuadores.
 
-## Instrucciones para el estudiante
-1. Lee todo el repositorio base de la actividad.
-2. Elige un tema pequeño y viable.
-3. Selecciona el lenguaje principal y justifícalo.
-4. Completa primero la documentación en `docs/`.
-5. Define pruebas mínimas en `docs/plan_de_pruebas.md` y `tests/test_plan.md`.
-6. Si te da tiempo, implementa un prototipo mínimo en `src/`.
-7. Verifica que tu entrega sea consistente con el alcance definido.
+## Mapeo GPIO actual
+No hay asignaciones de pines en el código fuente entregado. Ver tabla base en `docs/wiring.md` para documentar el mapeo cuando exista lógica funcional.
 
-## Criterios generales de evaluación
-- Claridad de la propuesta y del problema a resolver.
-- Viabilidad técnica para una práctica corta.
-- Coherencia entre alcance, entradas, salidas y pruebas.
-- Calidad de la estructura del repositorio y orden documental.
-- Justificación del lenguaje seleccionado.
-- Calidad de redacción técnica.
+## Flujo de trabajo recomendado
+1. Colocar firmware en `src/main.py` sin cambiar comportamiento funcional.
+2. Colocar módulos auxiliares en `lib/`.
+3. Actualizar `docs/architecture.md` con módulos y flujo.
+4. Actualizar `docs/wiring.md` con conexiones reales y GPIO definitivos.
 
-## Temas sugeridos (ejemplos)
-- **Mini Toolkit en ARM64**
-- **Asistente de Estudio en Terminal**
-- **Reporteador de Información del Sistema**
-- **Organizador de Archivos**
-- **Juego de Aprendizaje en Línea de Comandos**
+## Ejecución en Wokwi
+1. Crear un proyecto de Raspberry Pi Pico W en Wokwi.
+2. Copiar el contenido de `src/main.py` al archivo `main.py` del simulador.
+3. Cargar `diagram.json` del proyecto (si aplica).
+4. Ejecutar simulación y validar salida en consola/serial.
 
-## Nota importante
-Primero documenta y justifica la idea. Después, de forma opcional, implementa un prototipo pequeño. La documentación tiene mayor peso que escribir mucho código.
+## Ejecución en hardware real (Pico W)
+1. Instalar MicroPython en la tarjeta (archivo UF2 oficial de Pico W).
+2. Conectar la tarjeta por USB.
+3. Usar Thonny, mpremote o ampy para copiar:
+   - `src/main.py` → `/main.py` en la Pico W
+   - archivos de `lib/` → `/lib/` en la Pico W
+4. Reiniciar la tarjeta y monitorear por serial.
+
+## Wi-Fi (seguridad de credenciales)
+Si el firmware usa Wi-Fi:
+- No guardar SSID/contraseña en `main.py` hardcodeadas para producción.
+- Usar archivo local no versionado (ejemplo: `secrets.py`) y agregarlo a `.gitignore`.
+- En documentación, mostrar variables de ejemplo sin valores reales.
+
+Ejemplo de plantilla segura:
+```python
+# secrets.py (NO subir al repositorio)
+WIFI_SSID = "TU_SSID"
+WIFI_PASSWORD = "TU_PASSWORD"
+```
+
+## Nota de alcance
+Este repositorio está orientado a **documentación técnica y estructura**. No se modificó la lógica principal debido a que no se proporcionó lógica funcional más allá del marcador de posición.
