@@ -1,17 +1,15 @@
-# Plantilla de Documentación Técnica para Raspberry Pi Pico W (RP2040)
+# Pico W Keypad Scanner + LED Chaser (MicroPython)
 
-## Resumen
-Este repositorio está preparado para documentar y organizar un proyecto de **Raspberry Pi Pico W** usando **MicroPython**, priorizando estructura limpia y trazabilidad técnica sin alterar la lógica base del firmware.
+Proyecto para Raspberry Pi Pico W que escanea un keypad 4x4 (matriz) y confirma cada tecla detectada con salida serial y una animación tipo chaser en GPIO GP0–GP7.
 
-> Estado actual: el código fuente proporcionado contiene solo un marcador de posición (`# PASTE YOUR MICROPYTHON CODE HERE`).
+## Resumen técnico
+- **Board:** Raspberry Pi Pico W (RP2040)
+- **Firmware:** MicroPython (`src/main.py`)
+- **Entrada:** Keypad 4x4 en GP8–GP15
+- **Salida visual esperada:** barra de 8 LEDs en GP0–GP7
+- **Estado del diagrama recibido:** actualmente define solo 1 LED en GP0
 
-## Objetivo
-- Estandarizar la estructura del repositorio para Pico W.
-- Documentar arquitectura, cableado y mapeo GPIO.
-- Facilitar ejecución en **Wokwi** y en hardware real.
-- Mantener seguridad básica de credenciales si se agrega Wi-Fi.
-
-## Estructura propuesta (MicroPython)
+## Estructura del repositorio
 ```text
 .
 ├── README.md
@@ -24,54 +22,52 @@ Este repositorio está preparado para documentar y organizar un proyecto de **Ra
     └── wiring.md
 ```
 
-## Características de la plantilla
-- Organización mínima recomendada para firmware en MicroPython.
-- Documentación base lista para ampliar cuando se incorpore lógica real.
-- Sección de despliegue para simulación y para tarjeta física.
-- Reglas para manejo seguro de credenciales Wi-Fi.
+## Componentes (según JSON recibido)
+- 1 × Raspberry Pi Pico W
+- 1 × Keypad 4x4 (`wokwi-keypad64`)
+- 1 × LED azul
+- 1 × Resistor 220 Ω
 
-## Componentes (derivados del material disponible)
-Con la información entregada en este turno no se incluyó un `diagram.json` con contenido real, por lo que solo se puede confirmar:
+> Nota: el firmware está preparado para 8 LEDs, pero el JSON actual solo contiene 1 LED conectado a GP0.
 
-- 1 × Raspberry Pi Pico W (RP2040 con Wi‑Fi)
+## Mapeo GPIO
+### Keypad
+- GP8  → R1
+- GP9  → R2
+- GP10 → R3
+- GP11 → R4
+- GP12 → C1
+- GP13 → C2
+- GP14 → C3
+- GP15 → C4
 
-Si compartes el `diagram.json` real (Wokwi), se completa la lista exacta de periféricos, resistencias, sensores y actuadores.
-
-## Mapeo GPIO actual
-No hay asignaciones de pines en el código fuente entregado. Ver tabla base en `docs/wiring.md` para documentar el mapeo cuando exista lógica funcional.
-
-## Flujo de trabajo recomendado
-1. Colocar firmware en `src/main.py` sin cambiar comportamiento funcional.
-2. Colocar módulos auxiliares en `lib/`.
-3. Actualizar `docs/architecture.md` con módulos y flujo.
-4. Actualizar `docs/wiring.md` con conexiones reales y GPIO definitivos.
+### LED
+- GP0 → resistor 220 Ω → ánodo LED
+- cátodo LED → GND
 
 ## Ejecución en Wokwi
-1. Crear un proyecto de Raspberry Pi Pico W en Wokwi.
-2. Copiar el contenido de `src/main.py` al archivo `main.py` del simulador.
-3. Cargar `diagram.json` del proyecto (si aplica).
-4. Ejecutar simulación y validar salida en consola/serial.
+1. Crear proyecto **Raspberry Pi Pico W** en Wokwi.
+2. Copiar `src/main.py` como `main.py`.
+3. Cargar el JSON de diagrama proporcionado.
+4. Iniciar simulación.
+5. Presionar teclas del keypad y revisar serial:
+   - `CODEX System Active: Scanning Keypad...`
+   - `Key Detected: <tecla>`
 
-## Ejecución en hardware real (Pico W)
-1. Instalar MicroPython en la tarjeta (archivo UF2 oficial de Pico W).
-2. Conectar la tarjeta por USB.
-3. Usar Thonny, mpremote o ampy para copiar:
-   - `src/main.py` → `/main.py` en la Pico W
-   - archivos de `lib/` → `/lib/` en la Pico W
-4. Reiniciar la tarjeta y monitorear por serial.
+## Ejecución en hardware real
+1. Flashear MicroPython oficial para Pico W (UF2).
+2. Copiar `src/main.py` a la raíz del sistema de archivos de la placa como `main.py`.
+3. Conectar keypad 4x4 a GP8–GP15.
+4. Conectar barra de 8 LEDs a GP0–GP7 (cada LED con su resistor recomendado).
+5. Abrir monitor serial para observar eventos de teclado.
 
-## Wi-Fi (seguridad de credenciales)
-Si el firmware usa Wi-Fi:
-- No guardar SSID/contraseña en `main.py` hardcodeadas para producción.
-- Usar archivo local no versionado (ejemplo: `secrets.py`) y agregarlo a `.gitignore`.
-- En documentación, mostrar variables de ejemplo sin valores reales.
+## Validación de consistencia
+- La lógica de keypad **sí coincide** con el diagrama.
+- La parte de LED bar **no coincide totalmente** con el JSON (falta GP1–GP7).
+- No se modificó la lógica principal del firmware.
 
-Ejemplo de plantilla segura:
-```python
-# secrets.py (NO subir al repositorio)
-WIFI_SSID = "TU_SSID"
-WIFI_PASSWORD = "TU_PASSWORD"
-```
-
-## Nota de alcance
-Este repositorio está orientado a **documentación técnica y estructura**. No se modificó la lógica principal debido a que no se proporcionó lógica funcional más allá del marcador de posición.
+## Seguridad
+Este proyecto no usa Wi‑Fi actualmente. Si en el futuro se integra red:
+- usar `secrets.py` no versionado,
+- no publicar credenciales,
+- no hardcodear contraseñas en `main.py`.
